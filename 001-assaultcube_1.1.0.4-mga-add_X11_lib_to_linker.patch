@@ -1,0 +1,12 @@
+diff -uNr 1.1.0.4.orig/source/src/Makefile 1.1.0.4/source/src/Makefile
+--- 1.1.0.4.orig/source/src/Makefile	2010-11-14 13:46:24.000000000 -0500
++++ 1.1.0.4/source/src/Makefile	2011-12-26 01:21:47.322202404 -0500
+@@ -26,7 +26,7 @@
+ override CXXFLAGS+= -rdynamic
+ CLIENT_INCLUDES= $(INCLUDES) -I/usr/include `sdl-config --cflags` -idirafter ../include
+ # -lSDL_ttf 
+-CLIENT_LIBS= -L../enet/.libs -lenet -L$(USRLIB) `sdl-config --libs` -lSDL_image -lz -lGL -lopenal -lvorbisfile
++CLIENT_LIBS= -L../enet/.libs -lenet -L$(USRLIB) `sdl-config --libs` -lSDL_image -lz -lGL -lopenal -lvorbisfile -lX11
+ endif
+ 
+ CLIENT_OBJS= \

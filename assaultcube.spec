@@ -1,6 +1,6 @@
 Name:		assaultcube
 Version:	1.1.0.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -23,8 +23,8 @@ BuildRequires:	zlib-devel
 BuildRequires:	mesa-libGL-devel
 BuildRequires:	openal-devel
 BuildRequires:	libvorbis-devel
-BuildRequires: gettext
-
+BuildRequires:  gettext
+BuildRequires:  desktop-file-utils
 
 %description
 AssaultCube is a total conversion of Wouter van Oortmerssen's FPS called Cube.
@@ -165,7 +165,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
-* Sat Apr 20 2013 Rahul Sundaram <sundaram@fedoraproject.org> - 1.1.0.4-1
+* Tue May 21 2013 Rahul Sundaram <sundaram@fedoraproject.org> - 1.1.0.4-3
+- add build requires on desktop-file-utils
+
+* Sat Apr 20 2013 Rahul Sundaram <sundaram@fedoraproject.org> - 1.1.0.4-2
 - replace Expat with MIT as license tag
 - fix sf url to follow guidelines
 - fix spurious executable permission in several files

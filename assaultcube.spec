@@ -1,6 +1,6 @@
 Name:		assaultcube
 Version:	1.1.0.4
-Release:	3%{?dist}
+Release:	4%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -165,6 +165,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Sun Aug 31 2014 Sérgio Basto <sergio@serjux.com> - 1.1.0.4-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Tue May 21 2013 Rahul Sundaram <sundaram@fedoraproject.org> - 1.1.0.4-3
 - add build requires on desktop-file-utils
 

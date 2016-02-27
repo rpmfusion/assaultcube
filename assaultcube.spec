@@ -1,6 +1,10 @@
-Name:		assaultcube
-Version:	1.1.0.4
-Release:	4%{?dist}
+%global commit 752950989b4e286459ca9aee3d61a868d7b20fa4
+%global date 20160227
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
+Name: assaultcube
+Version: 1.2.0.2
+Release: 2.%{date}git%{shortcommit}%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -8,23 +12,25 @@ Release:	4%{?dist}
 # Engine is under the Cube license.  Free but GPL incompatible
 # https://lists.fedoraproject.org/pipermail/legal/2013-March/002104.html
 
-License:	Cube and MIT and GPLv2+ and Redistributable
-Group:		Amusements/Games
-Summary:	Total conversion of Cube first person shooter
-URL:		http://assault.cubers.net/index.html
-Source0:	http://downloads.sourceforge.net/actiongame/AssaultCube_v%{version}_source.tar.bz2
-Source1:   http://downloads.sourceforge.net/actiongame/AssaultCube_v%{version}.tar.bz2
-Source2:	AssaultCube-startscript.sh
-Source3:	AssaultCube-server.sh
-Patch0:		001-assaultcube_1.1.0.4-mga-add_X11_lib_to_linker.patch
-BuildRequires:	SDL-devel
-BuildRequires:	SDL_image-devel
-BuildRequires:	zlib-devel
-BuildRequires:	mesa-libGL-devel
-BuildRequires:	openal-devel
-BuildRequires:	libvorbis-devel
-BuildRequires:  gettext
-BuildRequires:  desktop-file-utils
+License: Cube and MIT and GPLv2+ and Redistributable
+Group: Amusements/Games
+Summary: Total conversion of Cube first person shooter
+URL: http://assault.cubers.net
+Source0: https://github.com/assaultcube/AC/archive/%{commit}.zip#/AC-%{commit}.zip
+Source1: %{name}.png
+Source2: AssaultCube-startscript.sh
+Source3: AssaultCube-server.sh
+
+BuildRequires: pkgconfig(sdl)
+BuildRequires: pkgconfig(SDL_image)
+BuildRequires: pkgconfig(zlib)
+BuildRequires: pkgconfig(gl)
+BuildRequires: pkgconfig(openal)
+BuildRequires: pkgconfig(vorbis)
+BuildRequires: pkgconfig(libcurl)
+BuildRequires: gettext
+BuildRequires: pkgconfig
+BuildRequires: desktop-file-utils
 
 %description
 AssaultCube is a total conversion of Wouter van Oortmerssen's FPS called Cube.
@@ -32,71 +38,72 @@ Set in a realistic looking environment, gameplay is fast and arcade. This game
 is all about team oriented multiplayer fun. Similar to counterstrike.
 
 %prep
-%setup -q -n %{version}
-%setup -q -T -D -b 1 -n %{version}
-%patch0 -p1
+%setup -q -n AC-%{commit}
 
-chmod -x source/enet/include/enet/unix.h
-chmod -x source/enet/host.c
-chmod -x source/enet/include/enet/list.h
-chmod -x source/enet/protocol.c
-chmod -x source/enet/unix.c
-chmod -x source/enet/packet.c
-chmod -x source/enet/list.c
-chmod -x source/enet/include/enet/protocol.h
-chmod -x source/enet/include/enet/enet.h
-chmod -x source/enet/include/enet/types.h
-chmod -x source/enet/peer.c
-chmod -x docs/colouredtext.txt
+# Remove precompiled files for Windows
+rm -rf bin_win32
+
+##Remove spurious executable permissions
+for i in `find . -type f \( -name "*.h" -o -name "*.c" -name "*.txt" \)`; do
+chmod a-x $i
+done
 
 iconv --from=ISO-8859-1 --to=UTF-8 docs/package_copyrights.txt > docs/package_copyrights.txt.new 
 touch -r docs/package_copyrights.txt docs/package_copyrights.txt.new
 mv docs/package_copyrights.txt.new docs/package_copyrights.txt
 
-
 %build
-pushd source/src
-# flags for enet:
-#export CFLAGS="%rpmoptflags"
-#export CXXFLAGS="%rpmoptflags"
-# flags for engine:
-#make CXXOPTFLAGS="%rpmoptflags"
-make
-popd
-
-
-
+# https://github.com/assaultcube/AC/issues/148
+%if 0%{?fedora} > 23
+sed -e 's|-Wall||g' -i source/src/Makefile
+SETOPT_FLAGS=$(echo "%{optflags}" | sed -e 's/-Wall//g')
+AC_FLAGS="$SETOPT_FLAGS -Wno-misleading-indentation -Wformat"
+%else
+AC_FLAGS="%{optflags}"
+%endif
+make -C source/src %{?_smp_mflags} \
+ CXX=g++ CC=gcc \
+ CXXFLAGS="$AC_FLAGS -fPIC -pie" \
+ CXXFLAGS+="-fsigned-char -ffast-math -rdynamic" \
+ CFLAGS="$AC_FLAGS -Wl,-z,relro -fPIC -pie -Wl,-z,now" \
+ CXXOPTFLAGS="$AC_FLAGS -fPIC -pie" \
+ LDFLAGS="%{__global_ldflags} -fPIC -pie -Wl,-z,now"
 
 %install
-
-pwd
-
+rm -rf %{buildroot}
 install -dm 755 %{buildroot}%{_libexecdir}
-install -m 755 source/src/ac_client \
+install -pm 755 source/src/ac_client \
 	%{buildroot}%{_libexecdir}/assaultcube_client.real
-install -m 755 source/src/ac_server \
+install -pm 755 source/src/ac_server \
 	%{buildroot}%{_libexecdir}/assaultcube_server.real
 
-install -dm 755 %{buildroot}%{_datadir}
-install -dm 755 %{buildroot}%{_datadir}/%{name}
+install -dp packages/audio %{buildroot}%{_datadir}/%{name}
+install -dp packages/crosshairs %{buildroot}%{_datadir}/%{name}
+install -dp packages/maps %{buildroot}%{_datadir}/%{name}
+install -dp packages/misc %{buildroot}%{_datadir}/%{name}
+install -dp packages/models %{buildroot}%{_datadir}/%{name}
+install -dp packages/textures %{buildroot}%{_datadir}/%{name}
+install -dp packages/locale %{buildroot}%{_datadir}/%{name}
 for i in config packages; do
 	cp -R $i \
 		%{buildroot}%{_datadir}/%{name}
 	find %{buildroot}%{_datadir}/%{name}/$i -type f -exec chmod 644 {} \;
 done
 
-# chmod o+rwt %{buildroot}%{_datadir}/%{name}/packages/maps
-
 # startscripts
-install -dm 755 %{buildroot}%{_bindir}
-install -m 755 %{SOURCE2} %{buildroot}%{_bindir}/%{name}
-install -m 755 %{SOURCE3} %{buildroot}%{_bindir}/%{name}_server
+install -dpm 755 %{buildroot}%{_bindir}
+install -pm 755 %{SOURCE2} %{buildroot}%{_bindir}/%{name}
+install -pm 755 %{SOURCE3} %{buildroot}%{_bindir}/%{name}_server
 
 # icon
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/{16x16,32x32,48x48}/apps
-install -m644 docs/pics/%{name}.png -D %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
+install -pm 644 %{SOURCE1} -D %{buildroot}%{_datadir}/icons/hicolor/48x48/apps
 
+# Set exe permission
+chmod a+x %{buildroot}%{_datadir}/%{name}/config/convert_mapconfig.sh
+rm -f %{buildroot}%{_datadir}/%{name}/packages/locale/AC.lang
 
+# Make .desktop files
 cat > %{name}.desktop << EOF
 [Desktop Entry]
 Name=AssualtCube
@@ -135,9 +142,8 @@ EOF
 
 mkdir -p %{buildroot}%{_datadir}/applications
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}.desktop
-desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}_server.desktop 
-desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}_server_lan.desktop 
-
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}_server.desktop
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}_server_lan.desktop
 
 %post
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
@@ -152,19 +158,29 @@ fi
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
-%doc source/*.txt README.html
-%doc docs
+%doc source/README.txt
+%license source/README_CUBEENGINE.txt
 %{_bindir}/assaultcube
 %{_bindir}/assaultcube_server
 %{_libexecdir}/assaultcube_client.real
 %{_libexecdir}/assaultcube_server.real
-%dir %{_datadir}/%{name}
-%{_datadir}/%{name}/*
-
+%{_datadir}/%{name}/
 %{_datadir}/applications/%{name}*.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Sat Feb 27 2016 Antonio Trande <sagitter@fedoraproject.org> - 1.2.0.2-2.20160227git7529509
+- Update to commit 7529509
+- Patched for GCC6
+- Disable 'misleading-indentation' warning with GCC6
+- Packaged assaultcube.png icon
+
+* Fri Feb 26 2016 Antonio Trande <sagitter@fedoraproject.org> - 1.2.0.2-1
+- Update to 1.2.0.2
+- Set GCC as compiler
+- Set compiler flags
+- Set PIE flag
+
 * Sun Aug 31 2014 Sérgio Basto <sergio@serjux.com> - 1.1.0.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

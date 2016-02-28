@@ -3,8 +3,8 @@
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name: assaultcube
-Version: 1.2.0.2
-Release: 2.%{date}git%{shortcommit}%{?dist}
+Version: 1.2.0.3
+Release: 0.2.%{date}git%{shortcommit}%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -16,7 +16,7 @@ License: Cube and MIT and GPLv2+ and Redistributable
 Group: Amusements/Games
 Summary: Total conversion of Cube first person shooter
 URL: http://assault.cubers.net
-Source0: https://github.com/assaultcube/AC/archive/%{commit}.zip#/AC-%{commit}.zip
+Source0: https://github.com/assaultcube/AC/archive/%{commit}.zip#/AC-%{shortcommit}.zip
 Source1: %{name}.png
 Source2: AssaultCube-startscript.sh
 Source3: AssaultCube-server.sh
@@ -48,7 +48,7 @@ for i in `find . -type f \( -name "*.h" -o -name "*.c" -name "*.txt" \)`; do
 chmod a-x $i
 done
 
-iconv --from=ISO-8859-1 --to=UTF-8 docs/package_copyrights.txt > docs/package_copyrights.txt.new 
+iconv --from=ISO-8859-1 --to=UTF-8 docs/package_copyrights.txt > docs/package_copyrights.txt.new
 touch -r docs/package_copyrights.txt docs/package_copyrights.txt.new
 mv docs/package_copyrights.txt.new docs/package_copyrights.txt
 
@@ -56,8 +56,7 @@ mv docs/package_copyrights.txt.new docs/package_copyrights.txt
 # https://github.com/assaultcube/AC/issues/148
 %if 0%{?fedora} > 23
 sed -e 's|-Wall||g' -i source/src/Makefile
-SETOPT_FLAGS=$(echo "%{optflags}" | sed -e 's/-Wall//g')
-AC_FLAGS="$SETOPT_FLAGS -Wno-misleading-indentation -Wformat"
+AC_FLAGS=$(echo "%{optflags}" | sed -e 's/-Wall/-Wno-misleading-indentation -Wformat/g')
 %else
 AC_FLAGS="%{optflags}"
 %endif
@@ -70,7 +69,6 @@ make -C source/src %{?_smp_mflags} \
  LDFLAGS="%{__global_ldflags} -fPIC -pie -Wl,-z,now"
 
 %install
-rm -rf %{buildroot}
 install -dm 755 %{buildroot}%{_libexecdir}
 install -pm 755 source/src/ac_client \
 	%{buildroot}%{_libexecdir}/assaultcube_client.real
@@ -107,7 +105,7 @@ rm -f %{buildroot}%{_datadir}/%{name}/packages/locale/AC.lang
 cat > %{name}.desktop << EOF
 [Desktop Entry]
 Name=AssualtCube
-Comment=AssaultCube is a total conversion of Wouter van Oortmerssen's FPS called Cube
+Comment=AssaultCube is a total conversion of Wouter van Oortmerssen s FPS called Cube
 Exec=%{_bindir}/%{name}
 Icon=%{name}
 Terminal=false
@@ -169,7 +167,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
-* Sat Feb 27 2016 Antonio Trande <sagitter@fedoraproject.org> - 1.2.0.2-2.20160227git7529509
+* Sun Feb 28 2016 Sérgio Basto <sergio@serjux.com> - 1.2.0.3-0.2.20160227git7529509
+- Minor improvements
+
+* Sat Feb 27 2016 Antonio Trande <sagitter@fedoraproject.org> - 1.2.0.3-0.1.20160227git7529509
 - Update to commit 7529509
 - Patched for GCC6
 - Disable 'misleading-indentation' warning with GCC6

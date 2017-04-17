@@ -4,7 +4,7 @@
 
 Name: assaultcube
 Version: 1.2.0.3
-Release: 0.3.%{date}git%{shortcommit}%{?dist}
+Release: 0.4.%{date}git%{shortcommit}%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -51,6 +51,12 @@ done
 iconv --from=ISO-8859-1 --to=UTF-8 docs/package_copyrights.txt > docs/package_copyrights.txt.new
 touch -r docs/package_copyrights.txt docs/package_copyrights.txt.new
 mv docs/package_copyrights.txt.new docs/package_copyrights.txt
+
+# Update enet to fix ppc64le build
+rm -f ./source/enet/config.guess
+rm -f ./source/enet/config.sub
+cp -fv /usr/lib/rpm/redhat/config.guess ./source/enet/config.guess
+cp -fv /usr/lib/rpm/redhat/config.sub ./source/enet/config.sub
 
 %build
 # https://github.com/assaultcube/AC/issues/148
@@ -167,6 +173,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Mon Apr 17 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.2.0.3-0.4.20160227git7529509
+- Fix ppc64le build
+
 * Sat Mar 25 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.2.0.3-0.3.20160227git7529509
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 

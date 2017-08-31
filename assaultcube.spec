@@ -4,7 +4,7 @@
 
 Name: assaultcube
 Version: 1.2.0.3
-Release: 0.4.%{date}git%{shortcommit}%{?dist}
+Release: 0.5.%{date}git%{shortcommit}%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -173,6 +173,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.2.0.3-0.5.20160227git7529509
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Mon Apr 17 2017 Leigh Scott <leigh123linux@googlemail.com> - 1.2.0.3-0.4.20160227git7529509
 - Fix ppc64le build
 

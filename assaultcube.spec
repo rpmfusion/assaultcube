@@ -4,7 +4,7 @@
 
 Name: assaultcube
 Version: 1.2.0.3
-Release: 0.7.%{date}git%{shortcommit}%{?dist}
+Release: 0.8.%{date}git%{shortcommit}%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -173,6 +173,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Sun Aug 19 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.2.0.3-0.8.20160227git7529509
+- Rebuilt for Fedora 29 Mass Rebuild binutils issue
+
 * Fri Jul 27 2018 RPM Fusion Release Engineering <sergio@serjux.com> - 1.2.0.3-0.7.20160227git7529509
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 

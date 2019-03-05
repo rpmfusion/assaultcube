@@ -28,6 +28,7 @@ BuildRequires: pkgconfig(gl)
 BuildRequires: pkgconfig(openal)
 BuildRequires: pkgconfig(vorbis)
 BuildRequires: pkgconfig(libcurl)
+BuildRequires: gcc-c++
 BuildRequires: gettext
 BuildRequires: pkgconfig
 BuildRequires: desktop-file-utils

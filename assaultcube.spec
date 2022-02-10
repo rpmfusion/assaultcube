@@ -4,7 +4,7 @@
 
 Name: assaultcube
 Version: 1.2.0.3
-Release: 0.14.%{date}git%{shortcommit}%{?dist}
+Release: 0.15.%{date}git%{shortcommit}%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -174,6 +174,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Thu Feb 10 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.2.0.3-0.15.20160227git7529509
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Tue Aug 03 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.2.0.3-0.14.20160227git7529509
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 

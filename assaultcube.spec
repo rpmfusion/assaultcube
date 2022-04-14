@@ -1,10 +1,6 @@
-%global commit 752950989b4e286459ca9aee3d61a868d7b20fa4
-%global date 20160227
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
-
-Name: assaultcube
-Version: 1.2.0.3
-Release: 0.15.%{date}git%{shortcommit}%{?dist}
+Name:    assaultcube
+Version: 1.3.0.2
+Release: 1%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -13,16 +9,15 @@ Release: 0.15.%{date}git%{shortcommit}%{?dist}
 # https://lists.fedoraproject.org/pipermail/legal/2013-March/002104.html
 
 License: Cube and MIT and GPLv2+ and Redistributable
-Group: Amusements/Games
 Summary: Total conversion of Cube first person shooter
-URL: http://assault.cubers.net
-Source0: https://github.com/assaultcube/AC/archive/%{commit}.zip#/AC-%{shortcommit}.zip
+URL:     http://assault.cubers.net
+Source0: https://github.com/assaultcube/AC/archive/v%{version}/AC-%{version}.tar.gz
 Source1: %{name}.png
 Source2: AssaultCube-startscript.sh
 Source3: AssaultCube-server.sh
 
-BuildRequires: pkgconfig(sdl)
-BuildRequires: pkgconfig(SDL_image)
+BuildRequires: pkgconfig(sdl2)
+BuildRequires: pkgconfig(SDL2_image)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(gl)
 BuildRequires: pkgconfig(openal)
@@ -39,7 +34,7 @@ Set in a realistic looking environment, gameplay is fast and arcade. This game
 is all about team oriented multiplayer fun. Similar to counterstrike.
 
 %prep
-%setup -q -n AC-%{commit}
+%setup -q -n AC-%{version}
 
 # Remove precompiled files for Windows
 rm -rf bin_win32
@@ -61,13 +56,10 @@ cp -fv /usr/lib/rpm/redhat/config.sub ./source/enet/config.sub
 
 %build
 # https://github.com/assaultcube/AC/issues/148
-%if 0%{?fedora} > 23
 sed -e 's|-Wall||g' -i source/src/Makefile
 AC_FLAGS=$(echo "%{optflags}" | sed -e 's/-Wall/-Wno-misleading-indentation -Wformat/g')
-%else
-AC_FLAGS="%{optflags}"
-%endif
-make -C source/src %{?_smp_mflags} \
+
+%make_build -C source/src \
  CXX=g++ CC=gcc \
  CXXFLAGS="$AC_FLAGS -fPIC -pie" \
  CXXFLAGS+="-fsigned-char -ffast-math -rdynamic" \
@@ -105,7 +97,7 @@ mkdir -p %{buildroot}%{_datadir}/icons/hicolor/{16x16,32x32,48x48}/apps
 install -pm 644 %{SOURCE1} -D %{buildroot}%{_datadir}/icons/hicolor/48x48/apps
 
 # Set exe permission
-chmod a+x %{buildroot}%{_datadir}/%{name}/config/convert_mapconfig.sh
+chmod a+x %{buildroot}%{_datadir}/%{name}/config/convert_pre_v1.2_mapconfig.sh
 rm -f %{buildroot}%{_datadir}/%{name}/packages/locale/AC.lang
 
 # Make .desktop files
@@ -150,18 +142,6 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}.desktop
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}_server.desktop
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}_server_lan.desktop
 
-%post
-/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-
-%posttrans
-/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-
 %files
 %doc source/README.txt
 %license source/README_CUBEENGINE.txt
@@ -174,6 +154,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Thu Apr 14 2022 Leigh Scott <leigh123linux@gmail.com> - 1.3.0.2-1
+- Update to 1.3.0.2
+
 * Thu Feb 10 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.2.0.3-0.15.20160227git7529509
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:    assaultcube
 Version: 1.3.0.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -154,6 +154,10 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}_server_
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Mon Aug 08 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.3.0.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
+  5.1
+
 * Thu Apr 14 2022 Leigh Scott <leigh123linux@gmail.com> - 1.3.0.2-1
 - Update to 1.3.0.2
 

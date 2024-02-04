@@ -1,6 +1,6 @@
 Name:    assaultcube
 Version: 1.3.0.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -154,6 +154,9 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}_server_
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Sun Feb 04 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.3.0.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
 * Thu Aug 03 2023 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.3.0.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
 

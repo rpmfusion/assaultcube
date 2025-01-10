@@ -1,6 +1,6 @@
 Name:    assaultcube
 Version: 1.3.0.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 # Licensing is complex
 # Details at http://packages.debian.org/changelogs/pool/contrib/a/assaultcube/assaultcube_1.1.0.4+dfsg2-1/assaultcube.copyright
@@ -103,7 +103,7 @@ rm -f %{buildroot}%{_datadir}/%{name}/packages/locale/AC.lang
 # Make .desktop files
 cat > %{name}.desktop << EOF
 [Desktop Entry]
-Name=AssualtCube
+Name=AssaultCube
 Comment=AssaultCube is a total conversion of Wouter van Oortmerssen s FPS called Cube
 Exec=%{_bindir}/%{name}
 Icon=%{name}
@@ -154,6 +154,9 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{name}_server_
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
+* Fri Jan 10 2025 josef radinger <cheese@nosuchhost.net> - 1.3.0.2-6
+- fix small typo
+
 * Fri Aug 02 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.3.0.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
 

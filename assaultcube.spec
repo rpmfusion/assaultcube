@@ -103,7 +103,7 @@ rm -f %{buildroot}%{_datadir}/%{name}/packages/locale/AC.lang
 # Make .desktop files
 cat > %{name}.desktop << EOF
 [Desktop Entry]
-Name=AssualtCube
+Name=AssaultCube
 Comment=AssaultCube is a total conversion of Wouter van Oortmerssen s FPS called Cube
 Exec=%{_bindir}/%{name}
 Icon=%{name}
